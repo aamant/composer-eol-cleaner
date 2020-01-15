@@ -1,0 +1,22 @@
+{
+    "name": "aamant/composer-eol-cleaner",
+    "description": "convert file to LF",
+    "minimum-stability": "stable",
+    "type": "composer-plugin",
+    "authors": [
+        {
+            "name": "Amant Arnaud",
+            "email": "contact@arnaudamant.fr"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "composer-plugin-api": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {"Aamant\\ComposerEolCleaner\\": "src"}
+    },
+    "extra": {
+        "class": "Aamant\\ComposerEolCleaner\\Plugin"
+    }
+}
