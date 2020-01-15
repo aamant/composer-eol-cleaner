@@ -54,6 +54,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         foreach ($packages as $packageName => $paths) {
             foreach ($paths as $path) {
                 $filename = $vendorDir . '/' . $packageName . '/' .$path;
+
+                if (! file_exists($filename)) {
+                    return;
+                }
+
                 $this->io->write(sprintf('  - Convert EOL to %s', $filename));
                 $fileSystem->copy($filename, $filename . '.origin');
 
