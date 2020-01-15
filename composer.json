@@ -2,6 +2,7 @@
     "name": "aamant/composer-eol-cleaner",
     "description": "convert file to LF",
     "minimum-stability": "stable",
+    "license": "BSD-3-Clause",
     "type": "composer-plugin",
     "authors": [
         {
