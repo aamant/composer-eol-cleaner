@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace Aamant\ComposerEolCleaner;
 
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
+use Composer\DependencyResolver\Operation\OperationInterface;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvents;
@@ -52,6 +56,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $fileSystem = new Filesystem(new ProcessExecutor($this->io));
 
         foreach ($packages as $packageName => $paths) {
+            if ($this->getPackageFromOperation($event->getOperation()) != $packageName) {
+                continue;
+            }
             foreach ($paths as $path) {
                 $filename = $vendorDir . '/' . $packageName . '/' .$path;
 
@@ -75,5 +82,25 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         // Don't allow out-of-control blank lines
         $content = preg_replace("/\n{2,}/", "\n" . "\n", $content);
         return $content;
+    }
+
+    /**
+     * @param OperationInterface $operation
+     * @return string
+     * @throws \Exception
+     */
+    protected function getPackageFromOperation(OperationInterface $operation)
+    {
+        if ($operation instanceof InstallOperation) {
+            $package = $operation->getPackage();
+        }
+        elseif ($operation instanceof UpdateOperation) {
+            $package = $operation->getTargetPackage();
+        }
+        else {
+            throw new \Exception('Unknown operation: ' . get_class($operation));
+        }
+
+        return $package->getName();
     }
 }
